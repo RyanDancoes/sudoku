@@ -95,7 +95,7 @@ def locked_candidate(row_col, house_num, house):
                             if value in val[0]:
                                 house_count += 1
                     if house_count == 2:
-                        print(cell, value)
+                        print('value', value, 'cell', cell, 'house', house_num)
                 prev_cell_house_num = cell_house_num
 
 

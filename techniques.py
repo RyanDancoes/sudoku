@@ -70,6 +70,38 @@ def naked_pair(house):
     return None, None, None, None, None
 
 
+def locked_candidate(row_col, house_num, house):
+    freq = {}
+    for cell, options in row_col.items():
+        if 0 in options.keys():
+            for value in options[0]:
+                if value in freq:
+                    freq[value].append(cell)
+                else:
+                    freq[value] = [cell]
+    prev_cell_house_num = 0
+
+    for value in freq:
+        if len(freq[value]) == 2: # or len(freq[value]) == 3:
+            for cell in freq[value]:
+                count = 1
+                cell_house_num = helpers.get_house_number(cell[0], cell[1])
+                if cell_house_num == prev_cell_house_num:
+                    count += 1
+                    house_count = 0
+                    for house_cell, val in house.items():
+                        if 0 in val.keys():
+
+                            if value in val[0]:
+                                house_count += 1
+                    if house_count == 2:
+                        print(cell, value)
+                prev_cell_house_num = cell_house_num
+
+
+    return None, None, None
+
+
 def check_everything(options, technique):
     prev_house_num = 0
     for key, val in options.items():
@@ -93,6 +125,15 @@ def check_everything(options, technique):
             if key1 and key2:
                 return key1, key2, value1, value2, remove
 
+        if technique == 'l_c':
+            house = helpers.get_house_options(options, house_num)
+            cells, value, remove = locked_candidate(row, house_num, house)
+            if cells and value and remove:
+                return cells, value, remove
+            cells, value, remove = locked_candidate(col, house_num, house)
+            if cells and value and remove:
+                return cells, value, remove
+
         if prev_house_num != house_num:
             house = helpers.get_house_options(options, house_num)
             prev_house_num = house_num
@@ -111,3 +152,5 @@ def check_everything(options, technique):
         return None, None
     elif technique == 'n_p':
         return None, None, None, None, None
+    elif technique == 'l_c':
+        return None, None, None

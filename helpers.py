@@ -47,6 +47,7 @@ def get_house(board, house_number):
 
 def get_house_options(options, house_number):
     sub_options = {}
+    house_number -= 1
     row_start, row_end = (house_number // 3) * 3, (house_number // 3 + 1) * 3
     col_start, col_end = (house_number % 3) * 3, (house_number % 3 + 1) * 3
 

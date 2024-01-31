@@ -95,25 +95,29 @@ def print_board(options):
 def solver(options):
 
     while True:
-        interest = techniques.naked_single(options)
-        if interest:
-            print(f"Naked single at {interest[0]+1}{interest[1]+1}.")
-            break
-        interest, value = techniques.check_everything(options, 'h_s')
-        if interest:
-            print(f"Hidden single of {value} at {interest[0]+1}{interest[1]+1}.")
-            break
-        interest1, interest2, value1, value2, remove = techniques.check_everything(options, 'n_p')
-        if interest1 and interest2:
-            print(f"Naked pair of {value1} and {value2} at {interest1[0] + 1}{interest1[1] + 1} and "
-                  f"{interest2[0] + 1}{interest2[1] + 1}.")
-            print('Cross off at: ', end='')
-            for cell in remove:
-                str_vals = [str(val) for val in remove[cell]]
-                print(f"{cell[0]+1}{cell[1]+1}: {','.join(str_vals)}", end='     ')
+        # interest = techniques.naked_single(options)
+        # if interest:
+        #     print(f"Naked single at {interest[0]+1}{interest[1]+1}.")
+        #     break
+        # interest, value = techniques.check_everything(options, 'h_s')
+        # if interest:
+        #     print(f"Hidden single of {value} at {interest[0]+1}{interest[1]+1}.")
+        #     break
+        # interest1, interest2, value1, value2, remove = techniques.check_everything(options, 'n_p')
+        # if interest1 and interest2:
+        #     print(f"Naked pair of {value1} and {value2} at {interest1[0] + 1}{interest1[1] + 1} and "
+        #           f"{interest2[0] + 1}{interest2[1] + 1}.")
+        #     print('Cross off at: ', end='')
+        #     for cell in remove:
+        #         str_vals = [str(val) for val in remove[cell]]
+        #         print(f"{cell[0]+1}{cell[1]+1}: {','.join(str_vals)}", end='     ')
+        #
+        #     print()
+        #     break
 
-            print()
-            break
+        cells, value, remove = techniques.check_everything(options, 'l_c')
+        if cells and value and remove:
+            print('okay')
         else:
             input('No solutions.')
             break

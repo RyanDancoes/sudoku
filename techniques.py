@@ -31,6 +31,45 @@ def hidden_single(house):
     return None, None
 
 
+def naked_pair(house):
+    doubles = {}
+    for key, val in house.items():
+        if 0 in val.keys():
+            if len(val[0]) == 2:
+                str_vals = [str(v) for v in val[0]]
+                str_ops = ''.join(str_vals)
+                if str_ops not in doubles:
+                    doubles[str_ops] = 1
+                else:
+                    doubles[str_ops] += 1
+
+    remove = {}
+    for double in doubles:
+        if doubles[double] == 2:
+            key1, key2 = (), ()
+            for key in house:
+                if int(double[0]) in list(house[key].values())[0] and int(double[1]) in list(house[key].values())[0]:
+                    if key1 != ():
+                        key2 = key
+                        break
+                    key1 = key
+            for key in house:
+                if key != key1 and key != key2:
+                    if int(double[0]) in list(house[key].values())[0]:
+                        remove[key] = []
+                        remove[key].append(int(double[0]))
+                    if int(double[1]) in list(house[key].values())[0]:
+                        if key in remove:
+                            remove[key].append(int(double[1]))
+                        else:
+                            remove[key] = []
+                            remove[key].append(double[1])
+            if remove:
+                return key1, key2, double[0], double[1], remove
+
+    return None, None, None, None, None
+
+
 def check_everything(options, technique):
     prev_house_num = 0
     for key, val in options.items():
@@ -72,42 +111,3 @@ def check_everything(options, technique):
         return None, None
     elif technique == 'n_p':
         return None, None, None, None, None
-
-
-def naked_pair(house):
-    doubles = {}
-    for key, val in house.items():
-        if 0 in val.keys():
-            if len(val[0]) == 2:
-                str_vals = [str(v) for v in val[0]]
-                str_ops = ''.join(str_vals)
-                if str_ops not in doubles:
-                    doubles[str_ops] = 1
-                else:
-                    doubles[str_ops] += 1
-
-    remove = {}
-    for double in doubles:
-        if doubles[double] == 2:
-            key1, key2 = (), ()
-            for key in house:
-                if int(double[0]) in list(house[key].values())[0] and int(double[1]) in list(house[key].values())[0]:
-                    if key1 != ():
-                        key2 = key
-                        break
-                    key1 = key
-            for key in house:
-                if key != key1 and key != key2:
-                    if int(double[0]) in list(house[key].values())[0]:
-                        remove[key] = []
-                        remove[key].append(int(double[0]))
-                    if int(double[1]) in list(house[key].values())[0]:
-                        if key in remove:
-                            remove[key].append(int(double[1]))
-                        else:
-                            remove[key] = []
-                            remove[key].append(double[1])
-            if remove:
-                return key1, key2, double[0], double[1], remove
-
-    return None, None, None, None, None

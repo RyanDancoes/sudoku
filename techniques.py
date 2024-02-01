@@ -83,7 +83,7 @@ def locked_candidate(row_col, house_num, house):
 
     cells_of_interest, value_of_interest, remove = [], 0, []
     for value in freq:
-        if len(freq[value]) == 2: # or len(freq[value]) == 3:
+        if len(freq[value]) == 2 or len(freq[value]) == 3:
             houses = set()
             cells = freq[value]
             for cell in freq[value]:

@@ -71,7 +71,6 @@ def naked_pair(house):
 
 
 def locked_candidate(row_col, house_num, house):
-    # print('row_col', row_col, 'house_num', house_num, 'house', house)
     freq = {}
     cell_house_num = 0
     for cell, options in row_col.items():
@@ -84,7 +83,7 @@ def locked_candidate(row_col, house_num, house):
 
     cells_of_interest, value_of_interest, remove = [], 0, []
     for value in freq:
-        if len(freq[value]) == 2: # or len(freq[value]) == 3:
+        if len(freq[value]) == 2 or len(freq[value]) == 3:
             houses = set()
             cells = freq[value]
             for cell in freq[value]:
@@ -93,7 +92,6 @@ def locked_candidate(row_col, house_num, house):
                 houses.add(cell_house_num)
 
             if len(houses) == 1:
-                # print(houses, house)
                 for house_cell, val in house.items():
                     if cell_house_num == house_num:
                         if 0 in val.keys():

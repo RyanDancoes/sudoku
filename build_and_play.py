@@ -114,7 +114,7 @@ def solver(options):
 
             print()
             break
-        cells, value, remove = techniques2.check_everything(options, 'l_c')
+        cells, value, remove = techniques.check_everything(options, 'l_c')
         if cells and value and remove:
             print(f"Locked candidate of {value} at {cells[0][0]+1}{cells[0][1]+1} and {cells[1][0]+1}{cells[1][1]+1}.")
             print(f"Cross off {value} at: ", end='')
@@ -195,7 +195,7 @@ def load():
     #     row = [int(num) for num in row_str]
     #     board.append(row)
     # input(f'{board}')
-    board = [[7, 0, 0, 8, 3, 0, 0, 6, 9], [0, 8, 3, 6, 0, 9, 0, 0, 0], [0, 0, 0, 0, 7, 0, 8, 3, 0], [5, 0, 0, 0, 9, 8, 0, 7, 0], [9, 7, 8, 0, 5, 0, 2, 0, 0], [0, 1, 4, 0, 0, 7, 9, 8, 5], [0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 5, 0, 0, 2, 0, 9, 0], [1, 6, 0, 0, 4, 3, 0, 0, 8]]
+    board = [[0, 0, 0, 0, 0, 6, 0, 9, 0], [0, 0, 0, 5, 0, 0, 0, 1, 0], [5, 0, 0, 0, 7, 0, 2, 0, 8], [0, 0, 0, 7, 0, 0, 3, 0, 6], [9, 0, 6, 0, 0, 0, 7, 0, 4], [7, 0, 5, 6, 8, 0, 0, 2, 0], [4, 0, 9, 0, 0, 0, 0, 7, 0], [0, 5, 2, 0, 0, 7, 0, 0, 0], [0, 7, 0, 9, 3, 0, 0, 0, 0]]
 
     game(board_load=board)
 

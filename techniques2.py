@@ -31,64 +31,6 @@ def hidden_single(house):
     return None, None
 
 
-def check_everything(options, technique):
-    prev_house_num = 0
-    for key, val in options.items():
-        row = helpers.get_row_options(options, key[0])
-        col = helpers.get_col_options(options, key[1])
-        house_num = helpers.get_house_number(key[0], key[1])
-
-        key1, key2, value1, value2, remove = naked_pair(row)
-        if key1 and key2:
-            return key1, key2, value1, value2, remove
-        key1, key2, value1, value2, remove = naked_pair(col)
-        if key1 and key2:
-            return key1, key2, value1, value2, remove
-
-        if prev_house_num != house_num:
-            house = helpers.get_house_options(options, house_num)
-            prev_house_num = house_num
-
-            key1, key2, value1, value2, remove = naked_pair(house)
-            if key1 and key2:
-                return key1, key2, value1, value2, remove
-
-    return None, None, None, None, None
-
-
-import helpers
-
-
-def naked_single(options):
-    for key, val in options.items():
-        if 0 in val.keys():
-            if len(val[0]) == 1:
-                return key
-    return None
-
-
-def hidden_single(house):
-    total = {}
-    value = 0
-    for num in range(1,10):
-        for key in house:
-            if num in list(house[key].values())[0]:
-                if num in total:
-                    total[num] += 1
-                else:
-                    total[num] = 1
-
-    for num in total:
-        if total[num] == 1:
-            value = num
-            break
-    for key in house:
-        if value in list(house[key].values())[0]:
-            return key, value
-
-    return None, None
-
-
 def naked_pair(house):
     doubles = {}
     for key, val in house.items():
@@ -129,7 +71,9 @@ def naked_pair(house):
 
 
 def locked_candidate(row_col, house_num, house):
+    # print('row_col', row_col, 'house_num', house_num, 'house', house)
     freq = {}
+    cell_house_num = 0
     for cell, options in row_col.items():
         if 0 in options.keys():
             for value in options[0]:
@@ -137,25 +81,30 @@ def locked_candidate(row_col, house_num, house):
                     freq[value].append(cell)
                 else:
                     freq[value] = [cell]
-    prev_cell_house_num = 0
 
+    cells_of_interest, value_of_interest, remove = [], 0, []
     for value in freq:
         if len(freq[value]) == 2: # or len(freq[value]) == 3:
+            houses = set()
+            cells = freq[value]
             for cell in freq[value]:
-                count = 1
+
                 cell_house_num = helpers.get_house_number(cell[0], cell[1])
-                if cell_house_num == prev_cell_house_num:
-                    count += 1
-                    house_count = 0
-                    for house_cell, val in house.items():
+                houses.add(cell_house_num)
+
+            if len(houses) == 1:
+                # print(houses, house)
+                for house_cell, val in house.items():
+                    if cell_house_num == house_num:
                         if 0 in val.keys():
 
-                            if value in val[0]:
-                                house_count += 1
-                    if house_count == 2:
-                        print('value', value, 'cell', cell, 'house', house_num)
-                prev_cell_house_num = cell_house_num
-
+                            if value in list(val.values())[0]:
+                                if house_cell not in cells:
+                                    remove.append(house_cell)
+                                    value_of_interest = value
+                                    cells_of_interest = cells
+    if cells_of_interest and value_of_interest and remove:
+        return cells_of_interest, value_of_interest, remove
 
     return None, None, None
 
@@ -183,6 +132,14 @@ def check_everything(options, technique):
             if key1 and key2:
                 return key1, key2, value1, value2, remove
 
+        if technique == 'l_c':
+            house = helpers.get_house_options(options, house_num)
+            cells, value, remove = locked_candidate(row, house_num, house)
+            if cells and value and remove:
+                return cells, value, remove
+            cells, value, remove = locked_candidate(col, house_num, house)
+            if cells and value and remove:
+                return cells, value, remove
 
         if prev_house_num != house_num:
             house = helpers.get_house_options(options, house_num)
@@ -197,21 +154,6 @@ def check_everything(options, technique):
                 key1, key2, value1, value2, remove = naked_pair(house)
                 if key1 and key2:
                     return key1, key2, value1, value2, remove
-
-    if technique == 'l_c':
-        for house_n in range(1, 10):
-            for key, val in options.items():
-                house_num = helpers.get_house_number(key[0], key[1])
-                if house_num == house_n:
-                    house = helpers.get_house_options(options, house_num)
-                    row = helpers.get_row_options(options, key[0])
-                    col = helpers.get_col_options(options, key[1])
-                    cells, value, remove = locked_candidate(row, house_num, house)
-                    if cells and value and remove:
-                        return cells, value, remove
-                    cells, value, remove = locked_candidate(col, house_num, house)
-                    if cells and value and remove:
-                        return cells, value, remove
 
     if technique == 'h_s':
         return None, None

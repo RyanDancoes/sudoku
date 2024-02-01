@@ -95,29 +95,33 @@ def print_board(options):
 def solver(options):
 
     while True:
-        # interest = techniques.naked_single(options)
-        # if interest:
-        #     print(f"Naked single at {interest[0]+1}{interest[1]+1}.")
-        #     break
-        # interest, value = techniques.check_everything(options, 'h_s')
-        # if interest:
-        #     print(f"Hidden single of {value} at {interest[0]+1}{interest[1]+1}.")
-        #     break
-        # interest1, interest2, value1, value2, remove = techniques.check_everything(options, 'n_p')
-        # if interest1 and interest2:
-        #     print(f"Naked pair of {value1} and {value2} at {interest1[0] + 1}{interest1[1] + 1} and "
-        #           f"{interest2[0] + 1}{interest2[1] + 1}.")
-        #     print('Cross off at: ', end='')
-        #     for cell in remove:
-        #         str_vals = [str(val) for val in remove[cell]]
-        #         print(f"{cell[0]+1}{cell[1]+1}: {','.join(str_vals)}", end='     ')
-        #
-        #     print()
-        #     break
+        interest = techniques.naked_single(options)
+        if interest:
+            print(f"Naked single at {interest[0]+1}{interest[1]+1}.")
+            break
+        interest, value = techniques.check_everything(options, 'h_s')
+        if interest:
+            print(f"Hidden single of {value} at {interest[0]+1}{interest[1]+1}.")
+            break
+        interest1, interest2, value1, value2, remove = techniques.check_everything(options, 'n_p')
+        if interest1 and interest2:
+            print(f"Naked pair of {value1} and {value2} at {interest1[0] + 1}{interest1[1] + 1} and "
+                  f"{interest2[0] + 1}{interest2[1] + 1}.")
+            print('Cross off at: ', end='')
+            for cell in remove:
+                str_vals = [str(val) for val in remove[cell]]
+                print(f"{cell[0]+1}{cell[1]+1}: {','.join(str_vals)}", end='     ')
 
-        cells, value, remove = techniques.check_everything(options, 'l_c')
+            print()
+            break
+        cells, value, remove = techniques2.check_everything(options, 'l_c')
         if cells and value and remove:
-            print('okay')
+            print(f"Locked candidate of {value} at {cells[0][0]+1}{cells[0][1]+1} and {cells[1][0]+1}{cells[1][1]+1}.")
+            print(f"Cross off {value} at: ", end='')
+            for cell in remove:
+                print(f"{cell[0]+1}{cell[1]+1}", end='     ')
+            print()
+            break
         else:
             input('No solutions.')
             break
@@ -191,7 +195,7 @@ def load():
     #     row = [int(num) for num in row_str]
     #     board.append(row)
     # input(f'{board}')
-    board = [[4, 6, 0, 0, 0, 0, 0, 9, 2], [0, 2, 3, 0, 4, 0, 0, 0, 0], [0, 5, 9, 0, 0, 2, 4, 0, 0], [0, 3, 0, 0, 7, 0, 0, 2, 4], [2, 7, 1, 6, 3, 4, 0, 5, 0], [0, 9, 4, 2, 8, 0, 0, 3, 0], [0, 4, 5, 7, 2, 0, 0, 0, 0], [0, 8, 0, 4, 9, 0, 2, 0, 0], [0, 1, 2, 0, 0, 3, 0, 4, 0]]
+    board = [[7, 0, 0, 8, 3, 0, 0, 6, 9], [0, 8, 3, 6, 0, 9, 0, 0, 0], [0, 0, 0, 0, 7, 0, 8, 3, 0], [5, 0, 0, 0, 9, 8, 0, 7, 0], [9, 7, 8, 0, 5, 0, 2, 0, 0], [0, 1, 4, 0, 0, 7, 9, 8, 5], [0, 0, 7, 0, 0, 0, 0, 0, 0], [0, 0, 5, 0, 0, 2, 0, 9, 0], [1, 6, 0, 0, 4, 3, 0, 0, 8]]
 
     game(board_load=board)
 

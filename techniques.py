@@ -72,6 +72,7 @@ def naked_pair(house):
 
 def locked_candidate(row_col, house_num, house):
     freq = {}
+    cell_house_num = 0
     for cell, options in row_col.items():
         if 0 in options.keys():
             for value in options[0]:
@@ -79,25 +80,29 @@ def locked_candidate(row_col, house_num, house):
                     freq[value].append(cell)
                 else:
                     freq[value] = [cell]
-    prev_cell_house_num = 0
 
+    cells_of_interest, value_of_interest, remove = [], 0, []
     for value in freq:
         if len(freq[value]) == 2: # or len(freq[value]) == 3:
+            houses = set()
+            cells = freq[value]
             for cell in freq[value]:
-                count = 1
+
                 cell_house_num = helpers.get_house_number(cell[0], cell[1])
-                if cell_house_num == prev_cell_house_num:
-                    count += 1
-                    house_count = 0
-                    for house_cell, val in house.items():
+                houses.add(cell_house_num)
+
+            if len(houses) == 1:
+                for house_cell, val in house.items():
+                    if cell_house_num == house_num:
                         if 0 in val.keys():
 
-                            if value in val[0]:
-                                house_count += 1
-                    if house_count == 2:
-                        print('value', value, 'cell', cell, 'house', house_num)
-                prev_cell_house_num = cell_house_num
-
+                            if value in list(val.values())[0]:
+                                if house_cell not in cells:
+                                    remove.append(house_cell)
+                                    value_of_interest = value
+                                    cells_of_interest = cells
+    if cells_of_interest and value_of_interest and remove:
+        return cells_of_interest, value_of_interest, remove
 
     return None, None, None
 

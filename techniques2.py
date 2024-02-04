@@ -107,6 +107,56 @@ def locked_candidate(row_col, house_num, house):
     return None, None, None
 
 
+def pointing_tuple(row_col, house_num, house, row_or_col):
+    cells_of_interest, value_of_interest, remove = [], 0, []
+
+    freq = {}
+    for house_cell, options in house.items():
+        if 0 in options.keys():
+            for value in options[0]:
+                if value in freq:
+                    freq[value].append(house_cell)
+                else:
+                    freq[value] = [house_cell]
+
+    for value in freq:
+        cells_of_interest, value_of_interest, remove = [], 0, []
+        rows = set(row for row, col in freq[value])
+        cols = set(col for row, col in freq[value])
+        if row_or_col == 'row':
+            if len(rows) == 1:
+                for cell, options in row_col.items():
+                    if cell[0] in rows:
+                        if helpers.get_house_number(cell[0], cell[1]) != house_num:
+                            if 0 in options.keys():
+                                if value in options[0]:
+                                    remove.append(cell)
+                                    value_of_interest = value
+                        else:
+                            if 0 in options.keys():
+                                if value in options[0]:
+                                    cells_of_interest.append(cell)
+
+        if row_or_col == 'col':
+            if len(cols) == 1:
+                for cell, options in row_col.items():
+                    if cell[1] in cols:
+                        if helpers.get_house_number(cell[0], cell[1]) != house_num:
+                            if 0 in options.keys():
+                                if value in options[0]:
+                                    remove.append(cell)
+                                    value_of_interest = value
+                        else:
+                            if 0 in options.keys():
+                                if value in options[0]:
+                                    cells_of_interest.append(cell)
+
+    if cells_of_interest and value_of_interest and remove:
+        return cells_of_interest, value_of_interest, remove
+
+    return None, None, None
+
+
 def check_everything(options, technique):
     prev_house_num = 0
     for key, val in options.items():
@@ -139,6 +189,15 @@ def check_everything(options, technique):
             if cells and value and remove:
                 return cells, value, remove
 
+        if technique == 'p_t':
+            house = helpers.get_house_options(options, house_num)
+            cells, value, remove = pointing_tuple(row, house_num, house, 'row')
+            if cells and value and remove:
+                return cells, value, remove
+            cells, value, remove = pointing_tuple(col, house_num, house, 'col')
+            if cells and value and remove:
+                return cells, value, remove
+
         if prev_house_num != house_num:
             house = helpers.get_house_options(options, house_num)
             prev_house_num = house_num
@@ -157,5 +216,5 @@ def check_everything(options, technique):
         return None, None
     elif technique == 'n_p':
         return None, None, None, None, None
-    elif technique == 'l_c':
+    elif technique == 'l_c' or technique == 'p_t':
         return None, None, None
